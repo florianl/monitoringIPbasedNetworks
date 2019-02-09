@@ -26,15 +26,18 @@ func main() {
 
 	device = os.Args[1]
 
+	// Prepare decoders for expected layers
 	parser := gopacket.NewDecodingLayerParser(layers.LayerTypeEthernet, &eth, &ip4, &ip6)
 	decoded := []gopacket.LayerType{}
-	handle, err = pcap.OpenLive(device, 1600, true, pcap.BlockForever)
+	// Attach the capture to the given interface
+	handle, err = pcap.OpenLive(device, 512, true, pcap.BlockForever)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Failed to open %s for capturing: %v\n", device, err)
 		os.Exit(1)
 	}
 	packetSource := gopacket.NewPacketSource(handle, handle.LinkType())
 	for packetData := range packetSource.Packets() {
+		// Try to decode each received packet and extract its information
 		parser.DecodeLayers(packetData.Data(), &decoded)
 		for _, layerType := range decoded {
 			switch layerType {
