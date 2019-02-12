@@ -1,3 +1,17 @@
+// Copyright 2019 Florian Lehner <dev@der-flo.net>
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 package main
 
 import (
@@ -20,7 +34,6 @@ import "C"
 const source string = `
 #define KBUILD_MODNAME "tracepoint_reporter"
 #include <uapi/linux/bpf.h>
-#include <linux/in.h>
 #include <linux/ip.h>
 #include <linux/ipv6.h>
 #include <linux/tracepoint.h>
@@ -95,6 +108,7 @@ type v6Report struct {
 }
 
 func main() {
+	// Translate the C code to eBPF instructions
 	module := bpf.NewModule(source, []string{"-w"})
 	defer module.Close()
 
@@ -104,6 +118,7 @@ func main() {
 		os.Exit(1)
 	}
 
+	// Attach the program to the tracepoint
 	err = module.AttachTracepoint("net:net_dev_start_xmit", tracepoint)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Failed to attach tracepoint: %v\n", err)
