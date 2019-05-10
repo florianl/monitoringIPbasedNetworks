@@ -188,13 +188,13 @@ func main() {
 			},
 		},
 	}
-	if err := rtnl.Filter().New(&filter); err != nil {
+	if err := rtnl.Filter().Add(&filter); err != nil {
 		fmt.Fprintf(os.Stderr, "could not assign eBPF: %v\n", err)
 		return
 	}
 
 	filter.Parent = tc.Egress
-	if err := rtnl.Filter().New(&filter); err != nil {
+	if err := rtnl.Filter().Add(&filter); err != nil {
 		fmt.Fprintf(os.Stderr, "could not assign eBPF: %v\n", err)
 		return
 	}
