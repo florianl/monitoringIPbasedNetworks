@@ -21,12 +21,13 @@ import (
 	"os/signal"
 
 	bpf "github.com/iovisor/gobpf/bcc"
+	"golang.org/x/sys/unix"
 )
 
 /*
 #cgo CFLAGS: -I/usr/include/bcc/compat
 #cgo LDFLAGS: -lbcc
-#include <bcc/bpf_common.h>
+#include <bcc/bcc_common.h>
 #include <bcc/libbpf.h>
 */
 import "C"
@@ -164,7 +165,7 @@ func main() {
 	module := bpf.NewModule(source, []string{"-w"})
 	defer module.Close()
 
-	fn, err := module.Load("xdp_reporter", C.BPF_PROG_TYPE_XDP, 0, 4096)
+	fn, err := module.Load("xdp_reporter", unix.BPF_PROG_TYPE_XDP, 0, 4096)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Failed to load xdp prog: %v\n", err)
 		os.Exit(1)

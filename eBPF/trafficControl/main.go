@@ -127,7 +127,7 @@ func main() {
 	module := bpf.NewModule(source, []string{"-w"})
 	defer module.Close()
 
-	fn, err := module.Load("tc_eBPF", C.BPF_PROG_TYPE_SCHED_CLS, 1, 65536)
+	fn, err := module.Load("tc_eBPF", unix.BPF_PROG_TYPE_SCHED_CLS, 1, 65536)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "failed to load ebpf prog: %v\n", err)
 		return
@@ -164,7 +164,7 @@ func main() {
 	}
 
 	if err := rtnl.Qdisc().Add(&qdisc); err != nil {
-		fmt.Fprintf(os.Stderr, "could not assign clsact to lo: %v\n", err)
+		fmt.Fprintf(os.Stderr, "could not assign clsact to %s: %v\n", os.Args[1], err)
 		return
 	}
 	// when deleting the qdisc, the applied filter will also be gone
