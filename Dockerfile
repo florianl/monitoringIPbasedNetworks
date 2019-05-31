@@ -22,7 +22,7 @@ RUN cd /tmp/ \
 # Fetch dependencies and install all binaries
 RUN cd /tmp/monitoringIPbasedNetworks \
     && go mod download \
-    && go install ./...
+    && cd libpcap/ && go install ./...
 
 ENV PATH="/root/go/bin:${PATH}"
 
