@@ -181,7 +181,7 @@ func main() {
 		tc.Attribute{
 			Kind: "bpf",
 
-			BPF: &tc.BPF{
+			BPF: &tc.Bpf{
 				FD:    uint32(fn),
 				Name:  "tc_prog",
 				Flags: 0x1,
